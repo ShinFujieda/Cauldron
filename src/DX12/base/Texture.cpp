@@ -298,7 +298,7 @@ namespace CAULDRON_DX12
         CreateUAV(index, NULL, pRV, &uavDesc);
     }
 
-    void Texture::CreateBufferUAV(uint32_t index, Texture* pCounterTex, CBV_SRV_UAV* pRV, bool hack64bit)
+    void Texture::CreateBufferUAV(uint32_t index, Texture* pCounterTex, CBV_SRV_UAV* pRV, uint32_t structureSizeAlias)
     {
         D3D12_RESOURCE_DESC resourceDesc = m_pResource->GetDesc();
 
@@ -306,8 +306,8 @@ namespace CAULDRON_DX12
         uavDesc.Format = m_header.format;
         uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
         uavDesc.Buffer.FirstElement = 0;
-        uavDesc.Buffer.NumElements = hack64bit ? m_header.width/2 : m_header.width;
-        uavDesc.Buffer.StructureByteStride = hack64bit ? 2*m_structuredBufferStride : m_structuredBufferStride;
+        uavDesc.Buffer.NumElements = m_header.width / structureSizeAlias;
+        uavDesc.Buffer.StructureByteStride = m_structuredBufferStride * structureSizeAlias;
         uavDesc.Buffer.CounterOffsetInBytes = 0;
         uavDesc.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
 
